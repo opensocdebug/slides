@@ -14,7 +14,7 @@ very impressive demo about what can be achieved with it.
 Beside this there is an `index.html` with jekyll syntax to include the
 slides. The reason we use separated files for this is to be flexible
 for other used of the slides, such as directly showing with
-[reveal.md][].
+[reveal-md][].
 
 ## Previewing locally
 
