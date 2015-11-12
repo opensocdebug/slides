@@ -1,7 +1,7 @@
 # Your presentation title
 title: Open SoC Debug
 
-baseurl: /slides
+baseurl: /slides/
 
 # The Reveal theme
 reveal_theme: black.css
