@@ -1,5 +1,7 @@
 # Your presentation title
-title: Jekyll and Reveal.js
+title: Open SoC Debug
+
+baseurl: /slides
 
 # The Reveal theme
 reveal_theme: black.css
