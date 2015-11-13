@@ -2,9 +2,10 @@
 title: Open SoC Debug
 
 baseurl: /slides/
+assets: http://opensocdebug.github.io/assets
 
 # The Reveal theme
-reveal_theme: black.css
+reveal_theme: solarized.css
 
 # The Reveal transition
 reveal_transition: default
