@@ -51,7 +51,7 @@ Modular design, clear interfaces, composability
 
 ---
 
-## Transport Interface
+## Transport Interface (glip)
 
 Hardware:
 
@@ -61,13 +61,13 @@ Hardware:
 
 Software:
 
-    void send(size_t len, uint16_t* data);
+    void glip_send(size_t len, uint16_t* data);
 
     // poll
-    int receive(size_t maxlen, uint16_t* data);
+    int glip_receive(size_t maxlen, uint16_t* data);
 
     // callback
-    register_callback(void (*recv)(size_t maxlen, uint16_t* data));
+    glip_register_callback(void (*recv)(size_t maxlen, uint16_t* data));
 
 ---
 
@@ -100,40 +100,167 @@ Software:
 
 ## Debug Modules
 
-TODO
+ * Common interface: NoC packets
+
+ * Modules can consume and produce packets
+
+ * Convenience wrapper: Memory-mapped registers
+
+ * Common basic functions: version, capabilities, enumeration
+
+ * Share a timebase via a globally distributed counter
 
 ---
 
 ## Core Debug Modules
 
-TODO
+ * Implement traditional run-control debugging
+
+  * Control functions: Run, step, reset
+
+  * Data functions: Read and write registers
+
+  * Breakpoint functions: Set and enable
+
+  * Generate breakpoint event
 
 ---
 
 ## Core Trace Modules
 
-TODO
+ * Emit debug events of execution trace
+
+ * Configurable
+ 
+  * On each instruction, branch, etc.
+
+  * Compression mechanism
+
+  * Set trigger conditions to reduce trace sizes
 
 ---
 
-## Trace Triggering
+## Trace Cross-Triggering
 
-TODO
+ * Correlate trigger events
+
+ * Ease debugging of complex systems
+
+  * "Trace this core if the DMA takes to long"
+
+  * "Trace the interconnect load during synchronization events"
+
+ * Separate trigger network for precise timing correlation
 
 ---
 
 ## Debug Processors
 
-TODO
+ * Debug modules with an entire subsystem
+
+ * Configure trace events to go there
+
+ * Aggregate and filter events
+
+ * Small microporgrams to genrate information from data
+
+ * Can generate trace events or even control messages
 
 ---
 
 ## Trace Recording
 
-TODO
+ * Standard: online debugging
+
+ * Possible multiplexed trace targets, e.g.,
+
+  * Trace to SD card
+
+  * Trace to system memory
+
+---
+
+## System Control Module
+
+ * Common module to all open soc debug systems
+
+ * Platform/Chip identifier
+
+ * Possibly clock gating for emulation mode
+
+ * Overflow configuration:
+
+  * Gate clocks (care needed with respect to I/O)
+
+  * Drop packets and notify host about this
 
 ---
 
 ## Other Debug Modules
 
-TODO
+ * Trace and debug devices
+
+ * Memory access module (read, write memory)
+
+ * Interconnect load traces
+
+ * ...
+
+---
+
+## Host Interface
+
+ * Lowest level: Send a packet to a debug module
+
+```
+void osd_send(uint16_t module, uint8_t class,
+             size_t len, uint16_t *packet) {
+    int16_t dbgpacket[MAX_DBGPKT_LEN];
+    assert((len+2) <= MAX_DBGPKT_LEN);
+
+    dbg_packet[0] = module << 6;
+    dbg_packet[1] = (OSD_HOST_ID << 6) | (class & 0x1f);
+    memcpy(&dbg_packet[2], packet, len);
+
+    glip_send(len + 2, dbg_packet);
+}
+```
+
+---
+
+## Host Interface: Memory-mapped
+
+```
+void osd_mm_read(uint16_t module, uint16_t address,
+                 uint16_t *value) {
+   int rv;
+   int16_t packet[1];
+
+   packet[0] = address;
+   osd_send(module, OSD_CLASS_MMRD, 2, packet);
+
+   osd_receive(module, OSD_CLASS_MMRD, 1, packet);
+   *value = packet[0];
+}
+   
+```
+
+---
+
+## Host Debug Software
+
+ * opensocdebug library as interface to debug infrastructure
+
+  * Low-level and memory-mapped functions
+
+  * APIs for different debug modules
+
+ * Integrate with (open) debug software
+
+---
+
+# Get involved
+
+Looking for people to discuss, write spec and contribute.
+
+[stefan@wallentowitz.de](mailto:stefan@wallentowitz.de)
