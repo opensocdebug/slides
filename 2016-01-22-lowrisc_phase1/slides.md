@@ -61,7 +61,11 @@ Stefan Wallentowitz - January 22, 2016
 
 ## Software Trace Module
 
-- CPU generates (id,value) tuples
+- Needs CPU extension:
+
+	- CPU generates (ID, value) tuples
+
+	- special IDs reserved: most notably thread switch
 
 - Add trace timestamp (local for the moment, see [spec issue #1](https://github.com/opensocdebug/documentation/issues/1))
 
@@ -70,6 +74,27 @@ Stefan Wallentowitz - January 22, 2016
 	- No spec, no implementation
 
 	- Previously existed at [OpTiMSoC/STM](https://github.com/optimsoc/sources/blob/master/src/rtl/debug_system/verilog/stm.v)
+
+---
+
+## STM Extensions to Rocket Core
+
+Interface
+
+	wire [63:0] value;
+	wire [15:0] id;
+	wire        enable;
+
+Track writes to `$r0` and keep last copy as `stm_value`
+
+On write to CSR `stm_id`, set interface for one cycle:
+
+    { {1'b0, stm_value[14:0]} , stm_id, 1'b1 }
+
+On write to `$x4`, set interface for one cycle:
+
+    { STM_ID_THREAD, $x4, 1'b1 }
+
 
 ---
 
