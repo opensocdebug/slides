@@ -33,6 +33,18 @@ Stefan Wallentowitz - January 22, 2016
 
 ---
 
+## Debug Interconnect
+
+- Simple unidirectional ring with flow control
+
+- Open for many improvements (hierarchical, high-level flow control)
+
+- Status
+
+	- Basic router in Chisel, possibly needed as System Verilog
+
+---
+
 ## System Control Module
 
 - Provides system information
