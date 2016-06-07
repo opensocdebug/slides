@@ -2,7 +2,7 @@
 
 ## Prototyping Phase 1
 
-Stefan Wallentowitz - May 22, 2016 
+Stefan Wallentowitz, Wei Song - May 22, 2016 
 
 ---
 
